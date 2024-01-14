@@ -150,14 +150,24 @@
 					<div class="row">
 						<div class="col-lg-6 col-xl-5">
 							<div class="text-container">
+							@if(!$rtemplate['appDefaults']->aboutText)
+								<p>{{$rtemplate['appDefaults']->aboutText}}</p>
+							@else							
 								<p>Maecenas fringilla quam posuere, pellentesque est nec, gravida turpis. Integer vitae mollis felis. Integer id quam id tellus hendrerit laciniad binfer
 									Sed id dui rutrum, dictum urna eu, accumsan turpis. Fusce id auctor velit, sed viverra dui rem dina
 								</p>
+							@endif
 							</div> <!-- end of text-container -->
 						</div> <!-- end of col -->
 						<div class="col-lg-6 col-xl-7">
 							<div class="image-container">
-								<img class="img-fluid" src="images/features/f0.jpg" alt="alternative">
+								@if($rtemplate['aboutImages']->count() == 1)
+									@foreach($rtemplate['aboutImages'] as $ai)
+										<img src="{{ asset('storage/'.$ai->imagePath)}}" class="img-fluid" alt="alternative"> 
+									@endforeach
+								@else
+									<img class="img-fluid" src="images/features/f0.jpg" alt="alternative">
+								@endif
 							</div> <!-- end of image-container -->
 						</div> <!-- end of col -->						
 					</div> <!-- end of row -->
@@ -175,15 +185,28 @@
 					<div class="row details-bs">
 						<div class="col-lg-6 col-xl-7">
 							<div class="image-container">
-								<img class="img-fluid" src="images/features/f6.jpg" alt="alternative">
+								@if($rtemplate['bannersImages']->count() != 0)
+									@foreach($rtemplate['bannersImages'] as $bi)
+										@if($bi->ref_id == 1)
+											<img src="{{ asset('storage/'.$bi->imagePath)}}" class="img-fluid" alt="alternative">
+										@endif
+									@endforeach
+								@else							
+									<img class="img-fluid" src="images/features/f6.jpg" alt="alternative">
+								@endif
 							</div> <!-- end of image-container -->
 						</div> <!-- end of col -->						
 						<div class="col-lg-6 col-xl-5">
 							<div class="text-container">
-								<h2>Get Amazing, Quality Food Prepared From Best Ingredients </h2>
-								<p>Maecenas fringilla quam posuere, pellentesque est nec, gravida turpis. Integer vitae mollis felis. Integer id quam id tellus hendrerit laciniad binfer
-									Sed id dui rutrum, dictum urna eu, accumsan turpis. Fusce id auctor velit, sed viverra dui rem dina
-								</p>
+								@if($rtemplate['banners']->count() == 0)
+									<h2>{{$rtemplate['banners'][0]->heading}}</h2>
+									<p>{{$rtemplate['banners'][0]->body}}</p>
+								@else								
+									<h2>Get Amazing, Quality Food Prepared From Best Ingredients </h2>
+									<p>Maecenas fringilla quam posuere, pellentesque est nec, gravida turpis. Integer vitae mollis felis. Integer id quam id tellus hendrerit laciniad binfer
+										Sed id dui rutrum, dictum urna eu, accumsan turpis. Fusce id auctor velit, sed viverra dui rem dina
+									</p>
+								@endif
 								<a class="btn btn-primary btn-fs" href="{{ config('app.url')}}/#reservation">Book Now</a>
 							</div> <!-- end of text-container -->
 						</div> <!-- end of col -->					
@@ -198,10 +221,44 @@
         <div class="container services">
             <div class="row">
 				<div class="col-lg-6 col-xxl-5 text-center mx-auto">
-				<h2 class="h2-heading section-title">Our Services  <div class="header-strips-two"></div></h2>
-				<p class="mb-4">Get the best services at the price you can afford</p>
+					<h2 class="h2-heading section-title">Our Services  <div class="header-strips-two"></div></h2>
+					<p class="mb-4">Get the best services at the price you can afford</p>
 				</div>
             </div>
+			@if($rtemplate['services']->count() == 0)
+				<div class="row align-items-center">			    				
+					@for($i = 0; $i < 3; $i++)	
+						<!--ICON-BOX -->
+						<div class="col-sm-4">
+							<div class="icon-box">
+							@if($rtemplate['services'][$i]->icon)
+								<i class="fa {{$rtemplate['services'][$i]->icon}}"></i>
+							@else
+								<i class="fa fa-hospital-user"></i>									
+							@endif
+								<h3 class="title-sm text-theme-sm text-theme">{{$rtemplate['services'][$i]->name}}</h3>
+								<p>{{$rtemplate['services'][$i]->description}}</p>
+							</div>
+						</div>
+					@endfor
+				</div>
+				<div class="row pad-sec-top-sm">			    				
+					@for($i = 3; $i < 6; $i++)	
+						<!--ICON-BOX -->
+						<div class="col-sm-4">
+							<div class="icon-box">
+							@if($rtemplate['services'][$i]->icon)
+								<i class="fa {{$rtemplate['services'][$i]->icon}}"></i>
+							@else
+								<i class="fa fa-briefcase-medical"></i>									
+							@endif
+								<h3 class="title-sm text-theme-sm text-theme">{{$rtemplate['services'][$i]->name}}</h3>
+								<p>{{$rtemplate['services'][$i]->description}}</p>
+							</div>
+						</div>
+					@endfor
+				</div>
+			@else
             <div class="row align-items-center">
                   <!-- ICON-BOX -->						
 					<div class="col-sm-4">
@@ -255,6 +312,7 @@
                      </div>
                   </div>
 		    </div>
+		@endif
         </div>
       </section>
       <!--===== section close =========-->
@@ -612,16 +670,29 @@
 					<div class="row details-bs">
 						<div class="col-lg-6 col-xl-5">
 							<div class="text-container">
-								<h2>Come &amp Celebrate Your Special Moments In Our Restuarant  </h2>
-								<p>Maecenas fringilla quam posuere, pellentesque est nec, gravida turpis. Integer vitae mollis felis. Integer id quam id tellus hendrerit laciniad binfer
-									Sed id dui rutrum, dictum urna eu, accumsan turpis. Fusce id auctor velit, sed viverra dui rem dina
-								</p>
+								@if($rtemplate['banners']->count() == 0)
+									<h2>{{$rtemplate['banners'][1]->heading}}</h2>
+									<p >{{$rtemplate['banners'][1]->body}}</p>
+								@else	
+									<h2>Come &amp Celebrate Your Special Moments In Our Restuarant  </h2>
+									<p>Maecenas fringilla quam posuere, pellentesque est nec, gravida turpis. Integer vitae mollis felis. Integer id quam id tellus hendrerit laciniad binfer
+										Sed id dui rutrum, dictum urna eu, accumsan turpis. Fusce id auctor velit, sed viverra dui rem dina
+									</p>
+								@endif
 								<a class="btn btn-default btn-fs" href="{{ config('app.url')}}/#contact">Get In Touch</a>
 							</div> <!-- end of text-container -->
 						</div> <!-- end of col -->
 						<div class="col-lg-6 col-xl-7">
 							<div class="image-container">
-								<img class="img-fluid" src="images/features/f4.jpg" alt="alternative">
+								@if($rtemplate['bannersImages']->count() != 0)
+									@foreach($rtemplate['bannersImages'] as $bi)
+										@if($bi->ref_id == 2)
+											<img src="{{ asset('storage/'.$bi->imagePath)}}" class="img-fluid" alt="alternative"> 
+										@endif
+									@endforeach
+								@else
+									<img class="img-fluid" src="images/features/f4.jpg" alt="alternative">
+								@endif
 							</div> <!-- end of image-container -->
 						</div> <!-- end of col -->						
 					</div> <!-- end of row -->
@@ -747,6 +818,11 @@
 	<section id="step-1" class="section-step step-wrap">
 	   <!--Client logo-->
 	   <div id="carousel-our-gallery" class="owl-carousel text-center margin-top-20">
+		@if($rtemplate['carouselImages']->count() > 5)
+			@foreach($rtemplate['carouselImages'] as $ci)	
+			  <div class="our-gallery"> <a href="#"> <img src="{{ asset('storage/'.$ci->imagePath)}}" class="img-responsive" alt="" /> </a> </div>
+			@endforeach
+		@else
 		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g1.jpg" class="img-responsive" alt="" /> </a> </div>
 		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g2.jpg" class="img-responsive" alt="" /> </a> </div>
 		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g3.jpg" class="img-responsive" alt="" /> </a> </div>
@@ -758,7 +834,8 @@
 		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g9.jpg" class="img-responsive" alt="" /> </a> </div>
 		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g10.jpg" class="img-responsive" alt="" /> </a> </div>
 		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g11.jpg" class="img-responsive" alt="" /> </a> </div>
-		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g12.jpg" class="img-responsive" alt="" /> </a> </div>		  	  
+		  <div class="our-gallery"> <a href="#"> <img src="images/gallery/g12.jpg" class="img-responsive" alt="" /> </a> </div>	
+		@endif
 	   </div>
 	   <!--/Client logo--> 
 	</section>
@@ -775,7 +852,22 @@
         </div>
         <div class="testimonials-slider swiper">
           <div class="swiper-wrapper">
-
+			@if($rtemplate['testimonials']->count() == 0)				
+				@foreach($rtemplate['testimonials'] as $ts)
+					<div class="swiper-slide">
+					  <div class="testimonial-item">
+						<p>
+						  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+						  {{$ts->comment}}
+						  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+						</p>
+						<img src="{{ asset('images/testimonials/testimonials-1.jpg') }}" class="testimonial-img" alt="">
+						<h3>{{$ts->name}}</h3>
+						<h4>{{$ts->title}}</h4>
+					  </div>
+					</div><!-- End testimonial item -->	
+				@endforeach
+			@else
             <div class="swiper-slide">
               <div class="testimonial-item">
                 <p>
@@ -840,7 +932,7 @@
                 <h4>Entrepreneur</h4>
               </div>
             </div><!-- End testimonial item -->
-
+			@endif
           </div>
           <div class="swiper-pagination"></div>
         </div>
@@ -856,12 +948,21 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<h2 class="h2-heading section-title"><span>Get In Touch With Us</span><div class="header-strips-two"></div></h2>
-							<p class="p-heading">Vel malesuada sapien condimentum nec. Fusce interdum nec urna et finibus pulvinar tortor id</p>
-							<ul class="list-unstyled li-u6">
-								<li><i class="fa fa-map-marker"></i> &nbsp;22 Praesentum, Pharetra Fin, CB 12345, KL</li>
-								<li><i class="fa fa-phone"></i> &nbsp;<a href="tel:00817202212">+81 720 2212</a></li>
-								<li><i class="fa fa-envelope"></i> &nbsp;<a href="mailto:lorem@ipsum.com">lorem@ipsum.com</a></li>
-							</ul>
+														@if($rtemplate['appDefaults']->count() == 0)	
+								<p class="p-heading">{{$rtemplate['appDefaults']->contactText}}</p>
+								<ul class="list-unstyled li-u6">
+									<li><i class="fa fa-map-marker"></i> &nbsp;22 Praesentum, Pharetra Fin, CB 12345, KL</li>
+									<li><i class="fa fa-phone"></i> &nbsp;<a href="{{$rtemplate['appDefaults']->phone}}">{{$rtemplate['appDefaults']->phone}}</a></li>
+									<li><i class="fa fa-envelope"></i> &nbsp;<a href="{{$rtemplate['appDefaults']->email}}">{{$rtemplate['appDefaults']->email}}</a></li>
+								</ul>							
+							@else
+								<p class="p-heading">Vel malesuada sapien condimentum nec. Fusce interdum nec urna et finibus pulvinar tortor id</p>
+								<ul class="list-unstyled li-u6">
+									<li><i class="fa fa-map-marker"></i> &nbsp;22 Praesentum, Pharetra Fin, CB 12345, KL</li>
+									<li><i class="fa fa-phone"></i> &nbsp;<a href="tel:00817202212">+81 720 2212</a></li>
+									<li><i class="fa fa-envelope"></i> &nbsp;<a href="mailto:lorem@ipsum.com">lorem@ipsum.com</a></li>
+								</ul>
+							@endif
 						</div> <!-- end of col -->
 					</div> <!-- end of row -->
 					<div class="row">
@@ -878,13 +979,13 @@
 								<div class="form-group">
 									<select class="form-control-select" required>
 										<option class="select-option" value="" disabled selected>Service type</option>
-										<option class="select-option" value="breakfast">Breakfast</option>
-										<option class="select-option" value="lunch">Lunch</option>
-										<option class="select-option" value="dinner">Dinner</option>
-										<option class="select-option" value="drinks">Drinks</option>	
-										<option class="select-option" value="entertainment">Entertainment</option>
-										<option class="select-option" value="parking">Valet Parking</option>
-										<option class="select-option" value="events">Events Hosting</option>										
+											<option class="select-option" value="breakfast">Breakfast</option>
+											<option class="select-option" value="lunch">Lunch</option>
+											<option class="select-option" value="dinner">Dinner</option>
+											<option class="select-option" value="drinks">Drinks</option>	
+											<option class="select-option" value="entertainment">Entertainment</option>
+											<option class="select-option" value="parking">Valet Parking</option>
+											<option class="select-option" value="events">Events Hosting</option>	
 									</select>
 								</div>
 								<div class="form-group">

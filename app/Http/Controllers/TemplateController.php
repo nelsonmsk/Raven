@@ -40,6 +40,7 @@ class TemplateController extends Controller
 		 $profiles = Profile::whereBetween('id', [1, 4])->get();		//Get 4 Profiles available with pageId 1-4
 		 $testimonials = Testimonial::whereBetween('pageId', [1, 3])->get();
 		 $services = Service::whereBetween('pageId',[1,7])->get();
+		 $servicesTypes = Ser
 		 $features = Feature::whereBetween('pageId',[1,4])->get();
 		 $plans = Plan::whereBetween('pageId',[1,3])->get();		 
 		 $banners = Banner::whereBetween('pageId',[1,4])->get();
@@ -50,7 +51,7 @@ class TemplateController extends Controller
 		 $brandImage = GalleryImage::where('ref_class', 'AppDefaults')
 										->latest()
 										->get();
-		 $aboutImage = GalleryImage::where('ref_class', 'About')
+		 $aboutImages = GalleryImage::where('ref_class', 'About')
 										->latest()
 										->get();										
 		 $servicesImages = GalleryImage::where('ref_class', 'Services')
@@ -58,7 +59,13 @@ class TemplateController extends Controller
 										->simplePaginate(2);										
 		 $bannersImages = GalleryImage::where('ref_class', 'Banners')
 										->latest()
-										->simplePaginate(2);		 
+										->simplePaginate(12);
+		 $featuresImages = GalleryImage::where('ref_class', 'Features')
+										->latest()
+										->simplePaginate(2);
+		 $carouselImages = GalleryImage::where('ref_class', 'Carousel')
+										->latest()
+										->simplePaginate(12);		 
 		 $projectsImages = GalleryImage::where('ref_class', 'Projects')
 										->latest()
 										->simplePaginate(12);
@@ -83,9 +90,11 @@ class TemplateController extends Controller
 				'projectTypes'=>$projectTypes,
 				'supports'=>$supports,	
 				'brandImage'=>$brandImage,
-				'aboutImage'=>$aboutImage,				
+				'aboutImages'=>$aboutImages,				
 				'servicesImages'=>$servicesImages,				
+				'featuresImages'=>$featuresImages,
 				'bannersImages'=>$bannersImages,
+				'carouselImages'=>$carouselImages,
 				'projectsImages'=>$projectsImages,
 				'projectTypesImages'=>$projectTypesImages,				
 				'testimonialsImages'=>$testimonialsImages,
